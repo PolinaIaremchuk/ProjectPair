@@ -50,60 +50,38 @@ public class TriangleCounter {
     }
 
     /**
-     * Counts right triangles with grouping points by their slope and finds perpendicular pairs
+     * Adapts a List&lt;Point&gt; to the PointStore interface.
+     */
+    private static class ListPointStore implements PointStore {
+        private final List<Point> points;
+
+        ListPointStore(List<Point> points) {
+            this.points = points;
+        }
+
+        @Override public int getX(int idx) { return points.get(idx).x; }
+        @Override public int getY(int idx) { return points.get(idx).y; }
+        @Override public int numPoints() { return points.size(); }
+        @Override public void close() {}
+    }
+
+    /**
+     * Counts right triangles with grouping points by their slope and finds perpendicular pairs.
+     * Delegates to the PointStore overload via a lightweight adapter.
      *
      * @param points list of all points
-     * @param vertexIndices vertices to check
+     * @param vertexIndices vertices to check, or null to check all
      * @return number of right triangles
      */
     public static int countRightTrianglesForVertices(List<Point> points, List<Integer> vertexIndices) {
-        int count = 0;
-        int n = points.size();
-
-        List<Integer> verticesToProcess;
-        if (vertexIndices == null) {
-            verticesToProcess = new ArrayList<>();
-            for (int i = 0; i < n; i++) {
-                verticesToProcess.add(i);
-            }
-        } else {
-            verticesToProcess = vertexIndices;
-        }
-
-        for (int i : verticesToProcess) {
-            Point vertex = points.get(i);
-            java.util.Map<Long, Integer> slopeCount = new java.util.HashMap<>();
-
-            for (int j = 0; j < n; j++) {
-                if (i == j) continue;
-                long dx = points.get(j).x - vertex.x;
-                long dy = points.get(j).y - vertex.y;
-
-                long slope = computeSlope(dx, dy);
-                slopeCount.put(slope, slopeCount.getOrDefault(slope, 0) + 1);
-            }
-
-            for (java.util.Map.Entry<Long, Integer> entry : slopeCount.entrySet()) {
-                long slope = entry.getKey();
-                int cnt = entry.getValue();
-
-                long perpSlope = getPerpendicularSlope(slope);
-                Integer perpCount = slopeCount.get(perpSlope);
-
-                if (perpCount != null && slope <= perpSlope) {
-                    count += cnt * perpCount;
-                }
-            }
-        }
-
-        return count;
+        return countRightTrianglesForVertices(new ListPointStore(points), vertexIndices);
     }
 
     /**
      * Counts right triangles using slope grouping algorithm with PointStore.
      *
      * @param store point store containing all points
-     * @param vertexIndices vertices to check
+     * @param vertexIndices vertices to check, or null to check all
      * @return number of right triangles
      */
     public static int countRightTrianglesForVertices(PointStore store, List<Integer> vertexIndices) {
