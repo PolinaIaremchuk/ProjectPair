@@ -83,7 +83,7 @@ All tests passed!
 
 ### Merging the two duplicate methods
 
-> **Work in progress**
+The two `countRightTrianglesForVertices` methods in `TriangleCounter.java` had identical logic but different parameter types. A private `ListPointStore` adapter was added to wrap a `List<Point>` as a `PointStore`, so the list version now delegates to the single store-based implementation. This removes the duplicate code and means any future changes only need to be made once.
 
 ---
 
