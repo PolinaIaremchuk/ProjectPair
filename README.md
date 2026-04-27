@@ -53,6 +53,40 @@ java com.tryright.ThreadTriangles <input_file> <num_threads>
 
 ---
 
+## Implementing Suggestions
+
+### Automated Test Script
+
+A bash script is included to compile the project and run all tests from the test plan automatically, printing PASS/FAIL for each case and a final summary.
+
+To run it, from the repo root:
+
+```bash
+chmod +x run_tests.sh
+./run_tests.sh
+```
+
+Example output:
+
+```
+Compiling...
+Compilation successful.
+
+=== Parameter Validation ===
+PASS: Triangles: no args prints usage
+PASS: ProcessTriangles: no args prints usage
+...
+
+Results: 24 passed, 0 failed
+All tests passed!
+```
+
+### Merging the two duplicate methods
+
+> **Work in progress**
+
+---
+
 ## Tests and Expected Output
 
 Run all commands from the repo root after compiling.
